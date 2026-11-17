@@ -1,0 +1,9 @@
+{
+    Filter = {
+        Bundles = (
+            "com.garena.game.kgvn",
+            "com.vng.freefirevn",
+            "com.garena.game.kgvn.gp"
+        );
+    };
+}
