@@ -1,0 +1,9 @@
+Package: com.asnlight.ui
+Name: ASNLIGHT UI
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: ASNLIGHT floating launcher and UI-only menu.
+Maintainer: QDONENLITE
+Author: QDONENLITE
+Section: Tweaks
+Depends: firmware (>= 14.0)
