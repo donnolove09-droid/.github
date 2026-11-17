@@ -7,20 +7,32 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
       - name: Install build tools
-        run: brew install make ldid dpkg
+        run: |
+          brew update
+          brew install ldid dpkg
 
-      - name: Install Theos
+      - name: Install Theos and iOS SDKs
         run: |
           git clone --recursive https://github.com/theos/theos.git "$HOME/theos"
-          git clone https://github.com/theos/sdks.git "$HOME/theos/sdks"
+          if [ ! -d "$HOME/theos/sdks/iPhoneOS.sdk" ]; then
+            rm -rf "$HOME/theos/sdks"
+            git clone https://github.com/theos/sdks.git "$HOME/theos/sdks"
+          fi
           echo "THEOS=$HOME/theos" >> "$GITHUB_ENV"
           echo "$HOME/theos/bin" >> "$GITHUB_PATH"
+
+      - name: Verify toolchain
+        run: |
+          test -x "$HOME/theos/bin/nic.pl"
+          test -d "$HOME/theos/sdks"
+          make --version
+          xcodebuild -version
 
       - name: Build package
         run: make package FINALPACKAGE=1
@@ -32,4 +44,4 @@ jobs:
           path: |
             packages/*.deb
             .theos/obj/**/*.dylib
-          if-no-files-found: warn
+          if-no-files-found: error
